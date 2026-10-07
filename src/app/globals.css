@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+/*
+ * Marca Fojansa (spec §1): azul corporativo del logo de fojansa.com (#002e62) y el cian de la gota
+ * (#40c4dd). Modo claro, tipografía sobria (Inter autoalojada). Ningún color se hardcodea en
+ * componentes: todo sale de aquí. Colores de gráficos: paleta validada con la skill dataviz.
+ */
+
+@theme inline {
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+}
+
+@theme {
+  --color-fj-navy: #002e62;
+  --color-fj-navy-hi: #0b4a8c;
+  --color-fj-navy-soft: #e6edf6;
+  --color-fj-cyan: #40c4dd;
+  --color-fj-cyan-soft: #e3f6fa;
+
+  --color-fj-bg: #f3f5f8;
+  --color-fj-surface: #ffffff;
+  --color-fj-surface-2: #f8fafc;
+  --color-fj-border: #dfe4eb;
+  --color-fj-border-hi: #c5cdd8;
+
+  --color-fj-text: #13213a;
+  --color-fj-muted: #596577;
+  --color-fj-faint: #8b94a3;
+
+  /* Estados (reservados, nunca para series de gráficos) */
+  --color-fj-ok: #1d7a3e;
+  --color-fj-ok-soft: #e4f4e9;
+  --color-fj-warn: #a85d00;
+  --color-fj-warn-soft: #fdf1dc;
+  --color-fj-danger: #b42318;
+  --color-fj-danger-soft: #fde8e6;
+  --color-fj-info: #2a78d6;
+  --color-fj-info-soft: #e4eefb;
+
+  /* Gráficos (dataviz: categórico slots 1 y 3, en orden fijo) */
+  --color-viz-voz: #2a78d6;
+  --color-viz-chat: #1baf7a;
+  --color-viz-grid: #e6eaf0;
+
+  /* WhatsApp del chat de prueba (spec §2.6) */
+  --color-wa-bg: #e5ddd5;
+  --color-wa-header: #075e54;
+  --color-wa-mine: #dcf8c6;
+  --color-wa-send: #128c7e;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-fj-bg);
+  color: var(--color-fj-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Números alineados en tablas y tarjetas */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Patrón de fondo del chat estilo WhatsApp */
+.wa-fondo {
+  background-color: var(--color-wa-bg);
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.35) 1px, transparent 1px),
+    radial-gradient(rgba(255, 255, 255, 0.35) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-position:
+    0 0,
+    11px 11px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
