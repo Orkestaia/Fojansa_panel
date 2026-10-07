@@ -17,56 +17,54 @@ el asistente. Demo el **jue 9-oct-2026**; base de la fase 1. Interlocutor: Guill
 
 ## Stack
 
-Next.js 15 (App Router) + React 19 + Tailwind 4 + TypeScript. Clerk (**proyecto de Clerk aún no
-creado: avisar a Aitor antes**). Supabase `ORKESTA_OPS_2026` (`ddruuldwacxvvhvhjomm`), tablas
-`fojansa_avisos`, `fojansa_contactos`, `fojansa_comunidades`, `fojansa_partes`: RLS activo sin
-políticas → **solo `service_role` desde el servidor**, nunca en `NEXT_PUBLIC_*`. Recharts para
-gráficos (paleta validada con la skill `dataviz`: 1 serie = azul marino de marca; voz/chat =
-`#2a78d6` / `#1baf7a`). Vitest. Docker (`output: "standalone"`) para producción en el servidor del
-cliente; Vercel solo para la demo (`fojansa.orkestaia.com`, **proyecto aún no creado: avisar**).
-Repo previsto `Orkestaia/fojansa-panel` (no creado; `gh` no está instalado, usar la API con el token de `secrets/`).
+Next.js 15 (App Router) + React 19 + Tailwind 4 + TypeScript + Recharts. Clerk. Supabase
+`ORKESTA_OPS_2026` (`ddruuldwacxvvhvhjomm`), tablas `fojansa_avisos`, `fojansa_contactos`,
+`fojansa_comunidades`, `fojansa_partes`: RLS activo sin políticas → **solo `service_role` desde el
+servidor**, nunca en `NEXT_PUBLIC_*`. Vitest. Docker (`output: "standalone"`) para producción en el
+servidor del cliente; Vercel solo para la demo (`fojansa.orkestaia.com`).
+Repo `github.com/Orkestaia/Fojansa_panel` (lo creó Aitor el 7-oct; **es público**: no subir nada sensible).
 
-Marca (sacada del logo de fojansa.com): azul marino `#002e62`, cian de la gota `#40c4dd`, modo
-claro, Inter autoalojada (`src/app/fonts/`). Logo en `public/fojansa-logo.png`. Pie: "con
-tecnología de Orkesta".
+Marca (del logo de fojansa.com): azul marino `#002e62`, cian `#40c4dd`, modo claro, Inter autoalojada.
+Tokens en `src/app/globals.css`; ningún color hardcodeado en componentes. Pie: "con tecnología de Orkesta".
+Gráficos: una serie = azul de marca; voz/chat = `#2a78d6` / `#1baf7a` (paleta validada con `dataviz`).
 
-## Estado (7-oct-2026, 20:00)
+## Estructura
 
-Hecho: scaffold (configs, Dockerfile, .gitignore), capa `src/lib/` con tests:
-`tipos.ts` (tipos = CHECKs de la BD), `etiquetas.ts`, `euskera.ts` (§2.7: tx↔ch, tz↔ts, k↔c/qu,
-z↔s, b↔v, h muda), `fechas.ts` (Europe/Madrid, periodos hoy/7d/30d/temporada = 1-oct→30-abr),
-`metricas.ts` (§2.1; los `silencio` no cuentan como aviso), `csv.ts` (importación comunidades con
-alias de columnas), `gomanage.ts` (texto "Copiar para Go!Manage"), `contactos.ts` (vinculación por
-teléfono, tipo deducido, estado derivado de la comunidad), `supabase.ts`, `acceso.ts`.
+- `src/lib/` — lógica pura con tests: `euskera.ts` (§2.7), `fechas.ts` (Europe/Madrid, periodos),
+  `metricas.ts`, `csv.ts`, `gomanage.ts`, `contactos.ts` (vinculación, estado derivado), `tipos.ts`
+  (= CHECKs de la BD), `etiquetas.ts`, `esquemas.ts` (zod de las APIs), `acceso.ts`, `supabase.ts`.
+- `src/lib/datos/` — acceso a Supabase (server-only): avisos, contactos, comunidades, partes, metricas.
+- `src/app/(panel)/(app)/` — pantallas; `src/app/api/` — route handlers (spec §3).
+- `src/components/` — UI compartida (`ui.tsx`), filtros, acciones, gráficos, chat.
+- `scripts/seed-demo.ts` — datos de demo repetibles (`call_id` `demo-*`, `raw.seed`).
+- `docs/QA-CHECKLIST.md` — checklist de la spec §6.
 
-**`npm install` falló a medias** (ENOTEMPTY en `node_modules/next/dist`: dos instalaciones se
-pisaron en OneDrive). Primer paso de la próxima sesión:
+## Estado (7-oct-2026, 22:00)
 
-```bash
-rm -rf node_modules && npm install --no-audit --no-fund && npx vitest run
-```
+**Construido entero y verificado en local** (35 tests, tsc y eslint limpios, todas las pantallas
+vistas en el navegador con datos reales + demo; chat probado contra n8n; CSV, PATCH de avisos y
+partes probados por API). Seed de demo ejecutado en OPS (14 avisos + 6 partes).
 
-Pendiente, en el orden que pidió Aitor: `scripts/seed-demo.ts` (§4: 12-15 avisos 7 días, 6 partes
-en 3 idiomas y 2 obras, direcciones de las 5 comunidades) → `src/app` (layout con Clerk, globals.css
-con tokens de marca, middleware) → bandeja + detalle + polling 10 s → inicio con métricas → contactos
-y comunidades (CSV) → partes → chat (`POST /api/chat` → `N8N_CHAT_WEBHOOK_URL`, respuesta
-`{respuesta, session_id, aviso_registrado}`; probado con curl, funciona) → README, `.env.example`,
-checklist QA §6 → repo, Clerk, Vercel.
+Pendiente de Aitor: crear la app de Clerk "Fojansa Panel" (registro cerrado, dos usuarios: Guillermo
+y oficina) y poner sus dos claves en Vercel; CNAME `fojansa` → `cname.vercel-dns.com` en Namecheap.
 
 ## Reglas específicas
 
-- Datos reales de prueba ya en `fojansa_avisos` (5 filas de voz y chat) y 5 comunidades: no
-  borrarlos; el seed añade, no sustituye (idempotente por `call_id` con prefijo `demo-`).
+- Datos reales de prueba en `fojansa_avisos` (Retell, chat) y 5 comunidades sembradas por JARVIS:
+  no borrarlos. El seed solo toca filas `demo-*`.
 - `acceso.ts`: sin claves de Clerk solo abre en `NODE_ENV=development` (usuario "Desarrollo");
   en producción se rechaza todo. `PANEL_EMAILS_PERMITIDOS` opcional. `FOJANSA_API_TOKEN` (≥32
   caracteres) para `POST /api/avisos/vincular` desde n8n.
-- Vinculación de contactos: al abrir la bandeja se vinculan los avisos sin `contacto_id` (más
-  simple para la demo) y además existe la ruta con token.
-- Todo en español, nombres de campo humanos (`etiquetas.ts`). Mostrar siempre la grafía original.
+- Vinculación de contactos: al abrir la bandeja se vinculan los avisos sin `contacto_id`; además
+  existe la ruta con token para n8n.
+- `direccion_normalizada` de comunidades es GENERATED ALWAYS: no se escribe nunca.
+- Los `silencio` no cuentan como aviso en el % de satisfactorios.
+- Todo en español, nombres humanos (`etiquetas.ts`). Mostrar siempre la grafía original.
 - Nada específico de Vercel salvo el hosting.
+- Hermes/JARVIS escriben en la misma Supabase: antes de "arreglar" un dato raro, comprobar si es de
+  una prueba suya (p. ej. "3� izquierda" viene de n8n, no del panel).
 
 ## Cómo ejecutar / testear / desplegar
 
-`npm run dev` (puerto 3000) · `npm test` · `npm run seed:demo` (necesita `.env.local`) ·
-`npm run build && npm start` · Docker: `docker build -t fojansa-panel . && docker run -p 3000:3000 --env-file .env fojansa-panel`.
-Variables: ver `.env.example`.
+`npm run dev` · `npm test` · `npx tsc --noEmit` · `npm run lint` · `npm run seed:demo` ·
+Docker: ver README. Preview en el workspace: configuración `fojansa-panel` de `.claude/launch.json` (puerto 3017).
