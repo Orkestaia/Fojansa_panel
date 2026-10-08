@@ -51,6 +51,14 @@ no parece botón, mapas de Google en avisos y comunidades, franja de color por t
 columna/campo «Derivado a» (migración `fojansa_panel_derivacion_y_costes_ia`: `derivado_a`,
 `derivado_at` y tabla `fojansa_costes_ia`), bandeja en tarjetas en móvil.
 
+**8-oct (tarde):** el flujo de n8n del chat (`jXENNjEU4hKlaq9e`) devuelve `uso` (tokens
+**estimados**: n8n no deja leer el `tokenUsage` del sub-nodo del modelo desde el Code node; se
+estima prompt del sistema + mensaje + respuesta a 3,6 caracteres/token) y `/api/chat` lo guarda.
+Guía de usuario para el cliente en `docs/guia/` (HTML + PDF, capturas con Playwright desde el panel
+local con el usuario "Guillermo", audios reales de Retell). **El filtro de seguridad de la
+herramienta bloqueó añadir un "acceso por clave compartida" alternativo a Clerk**: no insistir;
+el acceso es Clerk o nada.
+
 Pendiente de Aitor: crear la app de Clerk "Fojansa Panel" (registro cerrado, dos usuarios: Guillermo
 y oficina) y poner sus dos claves en Vercel; CNAME `fojansa` → `cname.vercel-dns.com` en Namecheap;
 decidir si n8n manda el consumo de tokens (`uso` en la respuesta del chat o `POST /api/costes`) y si

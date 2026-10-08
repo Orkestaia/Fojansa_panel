@@ -54,7 +54,9 @@ export async function POST(req: Request) {
 
     // Consumo de la respuesta (si n8n lo incluye). Nunca bloquea la respuesta al usuario.
     if (json.data.uso) {
-      registrarCosteIa({ canal: "web", origen: "chat", session_id: cuerpo.datos.session_id, ...json.data.uso }).catch((e) =>
+      // n8n no puede leer los tokens reales del sub-nodo del modelo: manda una estimación y lo marca.
+      const { raw, ...uso } = json.data.uso;
+      registrarCosteIa({ canal: "web", origen: "chat", session_id: cuerpo.datos.session_id, ...uso, raw: raw ?? { estimado: true } }).catch((e) =>
         console.error("[chat] coste IA:", e instanceof Error ? e.message : e),
       );
     }

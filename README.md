@@ -92,6 +92,16 @@ npm run lint
 
 Checklist de QA manual de la spec §6: [`docs/QA-CHECKLIST.md`](docs/QA-CHECKLIST.md).
 
+## Guía de usuario para Fojansa
+
+`docs/guia/guia-panel-fojansa.html` (y su PDF) con capturas, el audio de dos llamadas reales de
+prueba y la explicación del asistente de voz, el chat y los partes. Se regenera con:
+
+```bash
+python docs/guia/capturas.py        # capturas desde el panel local (Playwright, venv de Hermes)
+python docs/guia/exportar-pdf.py    # PDF A4
+```
+
 ## Datos de demo
 
 ```bash

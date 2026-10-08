@@ -16,3 +16,6 @@ next-env.d.ts
 qa/
 
 .vercel
+
+# Guía de cliente con audios y datos de pruebas reales: se entrega aparte, no al repo (que es público).
+docs/guia/
