@@ -28,6 +28,20 @@ export const EsquemaComunidad = z.object({
 
 const numeroOpcional = z.union([z.number(), z.string().trim()]).nullable().optional();
 
+/** Una respuesta de IA con su consumo (lo manda n8n o lo devuelve el webhook del chat como `uso`). */
+export const EsquemaCosteIa = z.object({
+  canal: z.enum(["voz", "whatsapp", "telegram", "web", "manual", "partes"]).optional(),
+  origen: z.string().trim().max(40).optional(),
+  session_id: z.string().trim().max(120).nullable().optional(),
+  aviso_id: z.string().uuid().nullable().optional(),
+  proveedor: z.string().trim().max(40).nullable().optional(),
+  modelo: z.string().trim().max(80).nullable().optional(),
+  tokens_entrada: z.number().int().nonnegative().nullable().optional(),
+  tokens_salida: z.number().int().nonnegative().nullable().optional(),
+  coste_eur: z.number().nonnegative().nullable().optional(),
+  raw: z.unknown().optional(),
+});
+
 export const EsquemaParte = z.object({
   estado: z.enum(ESTADOS_PARTE).optional(),
   obra: z.string().trim().max(200).nullable().optional(),

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import type { ComunidadConResumen } from "@/lib/datos/comunidades";
+import { EnlaceMapa, IconoMapa, MapaIncrustado } from "./Mapa";
 import { claseBotonPrimario, claseBotonSecundario, claseInput, Tarjeta, Vacio } from "./ui";
 
 type Editable = Pick<ComunidadConResumen, "nombre" | "direccion" | "administrador" | "contrato_vigente" | "pagos_al_dia" | "tipo_instalacion">;
@@ -17,6 +18,8 @@ export function TablaComunidades({ comunidades }: { comunidades: ComunidadConRes
   const [nueva, setNueva] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [guardando, setGuardando] = useState(false);
+  /** Comunidad cuyo mapa se enseña bajo la tabla. */
+  const [enMapa, setEnMapa] = useState<ComunidadConResumen | null>(null);
 
   function empezar(c: ComunidadConResumen) {
     setEditando(c.id);
@@ -99,6 +102,7 @@ export function TablaComunidades({ comunidades }: { comunidades: ComunidadConRes
         <input type="checkbox" checked={borrador?.pagos_al_dia ?? true} onChange={(e) => setBorrador((b) => b && { ...b, pagos_al_dia: e.target.checked })} className="h-4 w-4 accent-fj-navy" aria-label="Pagos al día" />
       </td>
       <td className="px-3 py-2 text-right text-fj-faint">—</td>
+      <td className="px-3 py-2 text-center text-fj-faint">—</td>
       <td className="px-4 py-2">
         <div className="flex justify-end gap-1">
           <button type="button" onClick={guardar} disabled={guardando} className={claseBotonPrimario}>
@@ -134,6 +138,7 @@ export function TablaComunidades({ comunidades }: { comunidades: ComunidadConRes
               <th className="px-3 py-2.5 text-center">Contrato vigente</th>
               <th className="px-3 py-2.5 text-center">Pagos al día</th>
               <th className="px-3 py-2.5 text-right">Avisos</th>
+              <th className="px-3 py-2.5 text-center">Mapa</th>
               <th className="px-4 py-2.5"></th>
             </tr>
           </thead>
@@ -141,7 +146,7 @@ export function TablaComunidades({ comunidades }: { comunidades: ComunidadConRes
             {nueva && filaEdicion}
             {comunidades.length === 0 && !nueva && (
               <tr>
-                <td colSpan={8} className="p-6">
+                <td colSpan={9} className="p-6">
                   <Vacio>No hay comunidades. Importa el CSV de Go!Manage o añade una a mano.</Vacio>
                 </td>
               </tr>
@@ -166,6 +171,23 @@ export function TablaComunidades({ comunidades }: { comunidades: ComunidadConRes
                       <span className="text-fj-faint">0</span>
                     )}
                   </td>
+                  <td className="px-3 py-2.5 text-center">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEnMapa((m) => (m?.id === c.id ? null : c));
+                      }}
+                      aria-label={`Mapa de ${c.direccion}`}
+                      aria-pressed={enMapa?.id === c.id}
+                      title="Ver en el mapa"
+                      className={`inline-flex h-8 w-8 items-center justify-center rounded-lg ${
+                        enMapa?.id === c.id ? "bg-fj-navy text-white" : "text-fj-muted hover:bg-fj-navy-soft hover:text-fj-navy"
+                      }`}
+                    >
+                      <IconoMapa />
+                    </button>
+                  </td>
                   <td className="px-4 py-2.5 text-right text-xs text-fj-faint">Editar</td>
                 </tr>
               ),
@@ -173,6 +195,22 @@ export function TablaComunidades({ comunidades }: { comunidades: ComunidadConRes
           </tbody>
         </table>
       </div>
+      {enMapa && (
+        <div className="border-t border-fj-border p-4">
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+            <p className="text-sm font-medium text-fj-text">
+              {enMapa.nombre ?? enMapa.direccion} <span className="font-normal text-fj-muted">· {enMapa.direccion}, Vitoria-Gasteiz</span>
+            </p>
+            <div className="flex items-center gap-2">
+              <EnlaceMapa direccion={enMapa.direccion} texto="Abrir en Google Maps" />
+              <button type="button" onClick={() => setEnMapa(null)} className={claseBotonSecundario}>
+                Cerrar mapa
+              </button>
+            </div>
+          </div>
+          <MapaIncrustado direccion={enMapa.direccion} alto={320} />
+        </div>
+      )}
     </Tarjeta>
   );
 }

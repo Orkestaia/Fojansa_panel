@@ -59,6 +59,9 @@ export interface Aviso {
   estado: EstadoAviso;
   pasado_por: string | null;
   pasado_at: string | null;
+  /** Número o persona a la que el agente derivó la conversación (lo rellena n8n o la oficina). */
+  derivado_a: string | null;
+  derivado_at: string | null;
   transcripcion: string | null;
   raw: unknown;
 }

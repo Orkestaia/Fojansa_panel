@@ -5,6 +5,7 @@ import { formatearFecha } from "@/lib/fechas";
 import { ESTADOS_PARTE, numero, type EstadoParte } from "@/lib/tipos";
 import { InsigniaEstadoParte, Tarjeta, Titulo, Vacio } from "@/components/ui";
 import { BuscadorSimple } from "@/components/BuscadorSimple";
+import { IconoOjo } from "@/components/Mapa";
 import { Refresco } from "@/components/Refresco";
 
 export const metadata = { title: "Partes" };
@@ -74,7 +75,8 @@ export default async function PaginaPartes({ searchParams }: { searchParams: Pro
                   <th className="px-3 py-2.5 text-right">Cantidad</th>
                   <th className="px-3 py-2.5 text-right">Horas</th>
                   <th className="px-3 py-2.5">Idioma</th>
-                  <th className="px-4 py-2.5">Estado</th>
+                  <th className="px-3 py-2.5">Estado</th>
+                  <th className="px-4 py-2.5 text-right">Ver</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-fj-border">
@@ -100,8 +102,13 @@ export default async function PaginaPartes({ searchParams }: { searchParams: Pro
                         {p.idioma_detectado ?? "—"}
                       </span>
                     </td>
-                    <td className="px-4 py-2.5">
+                    <td className="px-3 py-2.5">
                       <InsigniaEstadoParte estado={p.estado} />
+                    </td>
+                    <td className="px-4 py-2.5 text-right">
+                      <Link href={`/partes/${p.id}`} aria-label="Ver parte" title="Ver parte" className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-fj-navy-soft text-fj-navy hover:bg-fj-navy hover:text-white">
+                        <IconoOjo />
+                      </Link>
                     </td>
                   </tr>
                 ))}

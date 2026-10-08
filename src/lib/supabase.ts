@@ -24,4 +24,5 @@ export const TABLAS = {
   contactos: "fojansa_contactos",
   comunidades: "fojansa_comunidades",
   partes: "fojansa_partes",
+  costesIa: "fojansa_costes_ia",
 } as const;

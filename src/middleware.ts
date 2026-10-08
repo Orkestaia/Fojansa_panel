@@ -4,14 +4,14 @@ import { NextResponse, type NextFetchEvent, type NextRequest } from "next/server
 /**
  * Todo el panel va detrás de Clerk (spec §3) salvo:
  * - `/sign-in`: el propio login.
- * - `/api/avisos/vincular`: la llama n8n sin navegador; valida el Bearer `FOJANSA_API_TOKEN`
- *   dentro de la ruta (`src/lib/acceso.ts`).
+ * - `/api/avisos/vincular` y `/api/costes`: las llama n8n sin navegador; validan el Bearer
+ *   `FOJANSA_API_TOKEN` dentro de la ruta (`src/lib/acceso.ts`).
  * - `/api/salud`: comprobación de vida para Docker.
  *
  * Sin claves de Clerk: en desarrollo se deja pasar (usuario "Desarrollo", ver `acceso.ts`);
  * en producción las páginas y APIs rechazan por su cuenta porque `usuarioActual()` devuelve null.
  */
-const esPublica = createRouteMatcher(["/sign-in(.*)", "/api/avisos/vincular", "/api/salud"]);
+const esPublica = createRouteMatcher(["/sign-in(.*)", "/api/avisos/vincular", "/api/costes", "/api/salud"]);
 
 const clerkActivo = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY);
 

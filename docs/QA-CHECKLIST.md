@@ -32,6 +32,15 @@ Antes: `npm run seed:demo` ejecutado y los flujos de n8n (voz, chat, partes) pub
 | 1.22 | Validar / Corregir / Descartar cambian el estado y guardan quién y cuándo | ☐ |
 | 1.23 | Pie "con tecnología de Orkesta"; logo de Fojansa en la cabecera; todo en español | ☐ |
 | 1.24 | En tablet (≈ 800-1024 px) la navegación baja a una segunda fila y las tablas se desplazan horizontalmente sin romper | ☐ |
+| 1.25 | En móvil (≈ 375 px) la bandeja se ve como tarjetas con el botón «ver»; el resto de listas se desplazan en horizontal | ☐ |
+| 1.26 | Todas las listas (avisos, contactos, comunidades, partes) tienen el botón «ver» (ojo) que abre el detalle | ☐ |
+| 1.27 | Bandeja: franja de color por tipo (rojo urgente, azul avería, cian recibo, gris resto) y leyenda encima de la tabla | ☐ |
+| 1.28 | Bandeja: icono de mapa junto a la dirección abre Google Maps; en el detalle hay mapa incrustado | ☐ |
+| 1.29 | Comunidades: el icono de mapa de una fila despliega el mapa debajo; «Abrir en Google Maps» abre en pestaña nueva | ☐ |
+| 1.30 | Columna «Derivado a» en la bandeja; en el detalle se puede anotar / cambiar y queda la fecha | ☐ |
+| 1.31 | `/gastos`: total, coste por llamada y por minuto, desglose por producto, gasto por día, IA por modelo y últimas respuestas; cambia con el periodo | ☐ |
+| 1.32 | `/gastos`: «Llamada más cara» enlaza al aviso; las filas de llamadas enlazan al aviso | ☐ |
+| 1.33 | `POST /api/costes` con Bearer crea una fila y aparece en `/gastos` | ☐ |
 
 ## 2. Una llamada real de Retell aparece sola en la bandeja en menos de 15 s
 

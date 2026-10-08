@@ -11,6 +11,8 @@ const Esquema = z.object({
   motivo_revisar: z.string().trim().max(500).nullable().optional(),
   contacto_id: z.string().uuid().nullable().optional(),
   comunidad_id: z.string().uuid().nullable().optional(),
+  /** A quién se derivó (número o persona). Vacío/null lo borra. */
+  derivado_a: z.string().trim().max(200).nullable().optional(),
 });
 
 export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> }) {
@@ -42,6 +44,10 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
     if (d.contacto_id !== undefined) cambios.contacto_id = d.contacto_id;
     if (d.comunidad_id !== undefined) cambios.comunidad_id = d.comunidad_id;
     if (d.motivo_revisar !== undefined) cambios.motivo_revisar = d.motivo_revisar;
+    if (d.derivado_a !== undefined) {
+      cambios.derivado_a = d.derivado_a || null;
+      cambios.derivado_at = d.derivado_a ? new Date().toISOString() : null;
+    }
     if (d.estado) {
       cambios.estado = d.estado;
       if (d.estado === "pasado_al_programa") {

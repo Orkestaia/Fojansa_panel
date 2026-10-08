@@ -55,29 +55,51 @@ async function borrar() {
   if (a.error) throw a.error;
   const p = await sb.from("fojansa_partes").delete().contains("raw", { seed: "demo" }).select("id");
   if (p.error) throw p.error;
+  const ci = await sb.from("fojansa_costes_ia").delete().contains("raw", { seed: "demo" }).select("id");
+  if (ci.error) throw ci.error;
   // Contactos creados por la vinculación de avisos demo (teléfonos 6000000xx).
   const c = await sb.from("fojansa_contactos").delete().like("telefono", "6000000%").select("id");
   if (c.error) throw c.error;
-  console.log(`Borrados: ${a.data?.length ?? 0} avisos, ${p.data?.length ?? 0} partes, ${c.data?.length ?? 0} contactos demo`);
+  console.log(`Borrados: ${a.data?.length ?? 0} avisos, ${p.data?.length ?? 0} partes, ${ci.data?.length ?? 0} costes IA, ${c.data?.length ?? 0} contactos demo`);
 }
 
 async function sembrar() {
   const com = await comunidades();
   const grab = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"; // audio público de prueba
 
-  const voz = (n: number, extra: Record<string, unknown>) => ({
-    canal: "voz",
-    call_id: `${PREFIJO}voz-${n.toString().padStart(2, "0")}`,
-    url_grabacion: grab,
-    estado: "nuevo",
-    datos_completos: true,
-    urgente: false,
-    alcance: "individual",
-    comunidad_reconocida: true,
-    repetida: false,
-    raw: { seed: "demo" },
-    ...extra,
-  });
+  /** Desglose de coste al estilo de Retell (centavos) proporcional a la duración, para la pantalla de gastos. */
+  // Reparto por producto con las proporciones de una llamada real de Retell (37,5 % motor, 27,3 % voz, 30,7 % modelo, 4,6 % pruebas).
+  const costeRetell = (duracion: number, combinado: number) => {
+    const c = combinado * 100;
+    return {
+      combined_cost: c,
+      total_duration_seconds: duracion,
+      total_duration_unit_price: 23.33334,
+      product_costs: [
+        { product: "retell_voice_engine", cost: Number((c * 0.375).toFixed(4)), unit_price: 0.0916667 },
+        { product: "elevenlabs_tts_03_2026", cost: Number((c * 0.273).toFixed(4)), unit_price: 0.0666667 },
+        { product: "gpt_4_1", cost: Number((c * 0.307).toFixed(4)), unit_price: 0.075 },
+        { product: "gpt_4_1_text_testing", cost: Number((c * 0.045).toFixed(4)), unit_price: 1.5 },
+      ],
+    };
+  };
+  const voz = (n: number, extra: Record<string, unknown>) => {
+    const duracion = typeof extra.duracion_s === "number" ? extra.duracion_s : 0;
+    const coste = typeof extra.coste_eur === "number" ? extra.coste_eur : 0;
+    return {
+      canal: "voz",
+      call_id: `${PREFIJO}voz-${n.toString().padStart(2, "0")}`,
+      url_grabacion: grab,
+      estado: "nuevo",
+      datos_completos: true,
+      urgente: false,
+      alcance: "individual",
+      comunidad_reconocida: true,
+      repetida: false,
+      raw: { seed: "demo", ...(duracion && coste ? { cost: costeRetell(duracion, coste) } : {}) },
+      ...extra,
+    };
+  };
   const chat = (n: number, extra: Record<string, unknown>) => ({
     canal: "web",
     call_id: `${PREFIJO}chat-${n.toString().padStart(2, "0")}`,
@@ -300,6 +322,37 @@ async function sembrar() {
       estado: "pasado_al_programa",
       pasado_por: "Guardia",
       pasado_at: fecha(1, 21, 12),
+      derivado_a: "Guardia · 600 000 099",
+      derivado_at: fecha(1, 21, 10),
+      raw: {
+        seed: "demo",
+        cost: {
+          combined_cost: 15.11,
+          total_duration_seconds: 48,
+          product_costs: [
+            { product: "retell_voice_engine", cost: 4.4, unit_price: 0.0916667 },
+            { product: "elevenlabs_tts_03_2026", cost: 3.2, unit_price: 0.0666667 },
+            { product: "gpt_4_1", cost: 3.6, unit_price: 0.075 },
+            { product: "twilio_telephony", cost: 3.91, unit_price: 0.07 },
+          ],
+        },
+      },
+    }),
+    voz(15, {
+      created_at: fecha(2, 18, 40),
+      tipo: "persona",
+      descripcion: "Pide hablar con Guillermo por un presupuesto en curso",
+      direccion: null,
+      nombre: "Eneko Lasa",
+      telefono: "600000024",
+      alcance: "desconocido",
+      resumen: "Proveedor que pregunta por un presupuesto. En horario: transferida a oficina.",
+      duracion_s: 35,
+      coste_eur: 0.0912,
+      comunidad_reconocida: null,
+      estado: "cerrado",
+      derivado_a: "Oficina · 945 25 02 02",
+      derivado_at: fecha(2, 18, 41),
     }),
     chat(13, {
       created_at: fecha(0, 8, 5),
@@ -484,7 +537,53 @@ async function sembrar() {
   const ip = await sb.from("fojansa_partes").insert(partes).select("id");
   if (ip.error) throw ip.error;
 
-  console.log(`Sembrados: ${ia.data.length} avisos y ${ip.data.length} partes de demo. Los contactos se crean solos al abrir la bandeja.`);
+  // Consumo de IA por respuesta (lo que n8n manda a POST /api/costes): el chat de particular (demo-chat-03),
+  // el de comunidad (demo-chat-08), el de recibo (demo-chat-13) y las transcripciones de los partes.
+  const idChat = (n: number) => (ia.data as Array<{ id: string }>)[n - 1]?.id ?? null;
+  const respuesta = (diasAtras: number, hora: number, minuto: number, sesion: string, avisoIdx: number, entrada: number, salida: number) => ({
+    created_at: fecha(diasAtras, hora, minuto),
+    canal: "web",
+    origen: "chat",
+    session_id: `${PREFIJO}${sesion}`,
+    aviso_id: idChat(avisoIdx),
+    proveedor: "openai",
+    modelo: "gpt-4.1-mini",
+    tokens_entrada: entrada,
+    tokens_salida: salida,
+    coste_eur: Number(((entrada * 0.4 + salida * 1.6) / 1_000_000).toFixed(6)),
+    raw: { seed: "demo" },
+  });
+  const costesIa = [
+    respuesta(5, 17, 12, "chat-03", 3, 1850, 90),
+    respuesta(5, 17, 14, "chat-03", 3, 2100, 110),
+    respuesta(5, 17, 16, "chat-03", 3, 2380, 95),
+    respuesta(5, 17, 19, "chat-03", 3, 2650, 140),
+    respuesta(3, 10, 8, "chat-08", 8, 1800, 85),
+    respuesta(3, 10, 11, "chat-08", 8, 2050, 120),
+    respuesta(3, 10, 14, "chat-08", 8, 2300, 150),
+    respuesta(0, 8, 1, "chat-13", 13, 1790, 80),
+    respuesta(0, 8, 3, "chat-13", 13, 2010, 130),
+    respuesta(0, 8, 5, "chat-13", 13, 2240, 160),
+    ...[1, 1, 1, 0, 0, 0].map((d, i) => ({
+      created_at: fecha(d, 18 + (i % 3), 30 + i),
+      canal: "telegram",
+      origen: "partes",
+      session_id: null,
+      aviso_id: null,
+      proveedor: "openai",
+      modelo: "gpt-4o-transcribe",
+      tokens_entrada: 0,
+      tokens_salida: 0,
+      coste_eur: 0.0032,
+      raw: { seed: "demo" },
+    })),
+  ];
+  const ic = await sb.from("fojansa_costes_ia").insert(costesIa).select("id");
+  if (ic.error) throw ic.error;
+
+  console.log(
+    `Sembrados: ${ia.data.length} avisos, ${ip.data.length} partes y ${ic.data.length} respuestas de IA de demo. Los contactos se crean solos al abrir la bandeja.`,
+  );
 }
 
 (async () => {

@@ -5,6 +5,7 @@ import { formatearCorta } from "@/lib/fechas";
 import { ESTADOS_CONTACTO, type CanalAviso, type EstadoContacto } from "@/lib/tipos";
 import { InsigniaEstadoContacto, Tarjeta, Titulo, Vacio } from "@/components/ui";
 import { BuscadorSimple } from "@/components/BuscadorSimple";
+import { IconoOjo } from "@/components/Mapa";
 
 export const metadata = { title: "Contactos" };
 
@@ -47,7 +48,8 @@ export default async function PaginaContactos({ searchParams }: { searchParams: 
                   <th className="px-3 py-2.5">Estado</th>
                   <th className="px-3 py-2.5 text-right">Avisos</th>
                   <th className="px-3 py-2.5">Último aviso</th>
-                  <th className="px-4 py-2.5">Canal</th>
+                  <th className="px-3 py-2.5">Canal</th>
+                  <th className="px-4 py-2.5 text-right">Ver</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-fj-border">
@@ -73,7 +75,12 @@ export default async function PaginaContactos({ searchParams }: { searchParams: 
                     </td>
                     <td className="tabular px-3 py-2.5 text-right">{c.n_avisos}</td>
                     <td className="px-3 py-2.5 text-fj-muted">{c.ultimo_aviso ? formatearCorta(c.ultimo_aviso) : "—"}</td>
-                    <td className="px-4 py-2.5 text-fj-muted">{c.canal_preferido ? (ETIQUETA_CANAL[c.canal_preferido as CanalAviso] ?? c.canal_preferido) : "—"}</td>
+                    <td className="px-3 py-2.5 text-fj-muted">{c.canal_preferido ? (ETIQUETA_CANAL[c.canal_preferido as CanalAviso] ?? c.canal_preferido) : "—"}</td>
+                    <td className="px-4 py-2.5 text-right">
+                      <Link href={`/contactos/${c.id}`} aria-label="Ver ficha" title="Ver ficha" className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-fj-navy-soft text-fj-navy hover:bg-fj-navy hover:text-white">
+                        <IconoOjo />
+                      </Link>
+                    </td>
                   </tr>
                 ))}
               </tbody>

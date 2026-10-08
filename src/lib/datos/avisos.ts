@@ -57,7 +57,7 @@ export async function obtenerAviso(id: string): Promise<Aviso | null> {
 }
 
 export type CambiosAviso = Partial<
-  Pick<Aviso, "estado" | "motivo_revisar" | "pasado_por" | "pasado_at" | "contacto_id" | "comunidad_id">
+  Pick<Aviso, "estado" | "motivo_revisar" | "pasado_por" | "pasado_at" | "contacto_id" | "comunidad_id" | "derivado_a" | "derivado_at">
 >;
 
 export async function actualizarAviso(id: string, cambios: CambiosAviso): Promise<Aviso> {

@@ -39,14 +39,22 @@ Gráficos: una serie = azul de marca; voz/chat = `#2a78d6` / `#1baf7a` (paleta v
 - `scripts/seed-demo.ts` — datos de demo repetibles (`call_id` `demo-*`, `raw.seed`).
 - `docs/QA-CHECKLIST.md` — checklist de la spec §6.
 
-## Estado (7-oct-2026, 22:00)
+## Estado (8-oct-2026, mediodía)
 
-**Construido entero y verificado en local** (35 tests, tsc y eslint limpios, todas las pantallas
-vistas en el navegador con datos reales + demo; chat probado contra n8n; CSV, PATCH de avisos y
-partes probados por API). Seed de demo ejecutado en OPS (14 avisos + 6 partes).
+**Construido entero, verificado en local y en producción** (`fojansa-panel.vercel.app`, equipo
+`orkesta-automation`, proyecto `fojansa-panel`; despliega con cada push a `main`). 42 tests, tsc y
+eslint limpios. Seed de demo en OPS (15 avisos, 6 partes, 16 respuestas de IA).
+
+**8-oct, segunda ronda (pedida por Aitor):** pantalla `/gastos` (desglose de Retell por producto,
+€/min, gasto por día, IA por modelo), botón «ver» en todas las listas, rótulo «Panel de avisos» ya
+no parece botón, mapas de Google en avisos y comunidades, franja de color por tipo en la bandeja,
+columna/campo «Derivado a» (migración `fojansa_panel_derivacion_y_costes_ia`: `derivado_a`,
+`derivado_at` y tabla `fojansa_costes_ia`), bandeja en tarjetas en móvil.
 
 Pendiente de Aitor: crear la app de Clerk "Fojansa Panel" (registro cerrado, dos usuarios: Guillermo
-y oficina) y poner sus dos claves en Vercel; CNAME `fojansa` → `cname.vercel-dns.com` en Namecheap.
+y oficina) y poner sus dos claves en Vercel; CNAME `fojansa` → `cname.vercel-dns.com` en Namecheap;
+decidir si n8n manda el consumo de tokens (`uso` en la respuesta del chat o `POST /api/costes`) y si
+escribe `derivado_a` al transferir. El MCP de Vercel no tiene acceso al equipo: usar la CLI `npx vercel`.
 
 ## Reglas específicas
 

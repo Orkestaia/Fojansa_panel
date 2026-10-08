@@ -37,10 +37,15 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <div className="flex min-h-dvh flex-col">
       <header className="sticky top-0 z-20 border-b border-fj-border bg-fj-surface/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-1 px-4 py-2 sm:px-6">
-          <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="Inicio">
-            <Image src="/fojansa-logo.png" alt="Instalaciones Fojansa" width={124} height={44} priority className="h-9 w-auto" />
-            <span className="hidden border-l border-fj-border pl-3 text-sm font-medium text-fj-muted md:inline">Panel de avisos</span>
-          </Link>
+          <div className="flex shrink-0 items-center gap-3">
+            <Link href="/" aria-label="Inicio">
+              <Image src="/fojansa-logo.png" alt="Instalaciones Fojansa" width={124} height={44} priority className="h-9 w-auto" />
+            </Link>
+            {/* Rótulo, no botón: nombra la aplicación. */}
+            <span className="hidden border-l border-fj-border pl-3 text-xs font-medium uppercase tracking-wide text-fj-faint md:inline">
+              Panel de avisos
+            </span>
+          </div>
           {/* En pantallas estrechas (tablet) la navegación baja a una segunda fila en vez de recortarse. */}
           <div className="order-last w-full pb-1 xl:order-none xl:w-auto xl:flex-1 xl:pb-0">
             <NavEnlaces />

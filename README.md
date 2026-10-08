@@ -25,6 +25,12 @@ Spec: `ORKESTA - JARVIS/02_CLIENTS/INDUSTRY/instalaciones-fojansa/technical/foja
 | `/comunidades` | Lista editable inline + importar CSV (`direccion, nombre, administrador, contrato_vigente, pagos_al_dia`) |
 | `/partes`, `/partes/[id]` | Partes por audio: filtros por obra/estado/fecha, resumen por obra (horas y unidades), transcripción original y en español, Validar / Corregir / Descartar |
 | `/chat` | "Probar el asistente": interfaz WhatsApp, `session_id` nuevo por carga, toast "Aviso registrado" |
+| `/gastos` | Gastos del agente: total del periodo, coste por llamada y por minuto, desglose de Retell por producto (motor de voz, ElevenLabs, modelo, telefonía…), gasto por día, respuestas de IA con tokens y coste por modelo |
+
+Detalles transversales: botón «ver» (ojo) en todas las listas; franja de color por tipo en la bandeja
+(rojo urgente, azul avería, cian recibo, gris resto); enlace y mapa de Google Maps en avisos y
+comunidades (sin clave de API); columna «Derivado a» (número o persona a la que el asistente pasó la
+conversación), editable en el detalle del aviso; la bandeja se ve como tarjetas en móvil.
 
 ## API interna (route handlers, todas con sesión de Clerk)
 
@@ -32,7 +38,28 @@ Spec: `ORKESTA - JARVIS/02_CLIENTS/INDUSTRY/instalaciones-fojansa/technical/foja
 `POST /api/avisos/vincular` (sesión **o** `Authorization: Bearer FOJANSA_API_TOKEN`, para n8n) ·
 `GET/POST /api/contactos` · `GET/PATCH /api/contactos/:id` · `GET/POST /api/comunidades` ·
 `GET/PATCH /api/comunidades/:id` · `POST /api/comunidades/importar` (multipart `archivo`) ·
-`GET /api/partes` · `GET/PATCH /api/partes/:id` · `POST /api/chat` · `GET /api/salud`.
+`GET /api/partes` · `GET/PATCH /api/partes/:id` · `POST /api/chat` · `GET /api/gastos?periodo=` ·
+`POST /api/costes` (sesión **o** Bearer, para n8n) · `GET /api/salud`.
+
+## Gastos de IA (tokens por respuesta)
+
+Las llamadas de voz traen su coste de Retell (`raw.cost`, en centavos de dólar; n8n guarda
+`coste_eur = combined_cost / 100` sin cambio de divisa y el panel lo mantiene así). El coste de las
+respuestas de IA (chat, partes) **no lo conoce el panel por sí solo**: lo tiene que mandar n8n. Dos vías:
+
+1. **En la respuesta del webhook del chat** (nodo «Responder al panel»), añadiendo `uso`:
+   ```json
+   { "respuesta": "…", "session_id": "…", "aviso_registrado": false,
+     "uso": { "proveedor": "openai", "modelo": "gpt-4.1-mini", "tokens_entrada": 1850, "tokens_salida": 90 } }
+   ```
+   `POST /api/chat` lo guarda en `fojansa_costes_ia`. Si no viene `coste_eur`, se estima con la tabla
+   de precios de `src/lib/costes.ts` (`PRECIO_POR_MILLON`, USD por millón de tokens).
+2. **Desde cualquier flujo** (Telegram, partes): nodo HTTP Request → `POST https://<panel>/api/costes`
+   con `Authorization: Bearer <FOJANSA_API_TOKEN>` y el mismo cuerpo que `uso` más `canal`,
+   `origen` (`chat`, `partes`, `transcripcion`…), `session_id` y `aviso_id` opcionales.
+
+En n8n el consumo de tokens del nodo Agente sale en `$json.tokenUsage` (o en la salida del modelo si
+se activa «Return intermediate steps»). Si no se manda nada, la pantalla de gastos enseña solo la voz.
 
 ## Variables de entorno
 
@@ -107,3 +134,8 @@ o Nginx). Nada del código depende de Vercel.
   → sin contrato) y, si no, del contrato del particular; el estado "a mano" se respeta cuando la
   comunidad está al día.
 - **`direccion_normalizada`** es una columna generada en la BD: nunca se escribe desde el panel.
+- **Columnas añadidas el 8-oct** (migración `fojansa_panel_derivacion_y_costes_ia`): `fojansa_avisos.derivado_a`
+  y `derivado_at`; tabla `fojansa_costes_ia` (RLS, sin políticas). Para que n8n rellene «Derivado a»
+  al transferir una llamada, basta con que escriba `derivado_a` en la fila del aviso.
+- **Mapas** con Google Maps sin clave (búsqueda y `output=embed`). Las direcciones sin ciudad se
+  completan con «Vitoria-Gasteiz».

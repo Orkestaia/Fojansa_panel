@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { exigirUsuario } from "@/lib/acceso";
 import { leerCuerpo, respuestaError } from "@/lib/api";
+import { registrarCosteIa } from "@/lib/datos/costes";
+import { EsquemaCosteIa } from "@/lib/esquemas";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +16,8 @@ const Salida = z.object({
   respuesta: z.string(),
   session_id: z.string().optional(),
   aviso_registrado: z.boolean().optional(),
+  /** Opcional: consumo de la respuesta. Si n8n lo manda, se guarda en fojansa_costes_ia. */
+  uso: EsquemaCosteIa.optional(),
 });
 
 /**
@@ -47,6 +51,14 @@ export async function POST(req: Request) {
     if (!r.ok) return Response.json({ error: `El asistente no responde (${r.status})` }, { status: 502 });
     const json = Salida.safeParse(await r.json());
     if (!json.success) return Response.json({ error: "Respuesta del asistente no reconocida" }, { status: 502 });
+
+    // Consumo de la respuesta (si n8n lo incluye). Nunca bloquea la respuesta al usuario.
+    if (json.data.uso) {
+      registrarCosteIa({ canal: "web", origen: "chat", session_id: cuerpo.datos.session_id, ...json.data.uso }).catch((e) =>
+        console.error("[chat] coste IA:", e instanceof Error ? e.message : e),
+      );
+    }
+
     return Response.json({
       respuesta: json.data.respuesta,
       session_id: json.data.session_id ?? cuerpo.datos.session_id,

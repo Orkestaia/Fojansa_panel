@@ -15,12 +15,14 @@ export function AccionesAviso({
   estado,
   motivoRevisar,
   contactoId,
+  derivadoA,
   textoGoManage,
 }: {
   id: string;
   estado: EstadoAviso;
   motivoRevisar: string | null;
   contactoId: string | null;
+  derivadoA: string | null;
   textoGoManage: string;
 }) {
   const router = useRouter();
@@ -29,6 +31,8 @@ export function AccionesAviso({
   const [copiado, setCopiado] = useState(false);
   const [pidiendoMotivo, setPidiendoMotivo] = useState(false);
   const [motivo, setMotivo] = useState(motivoRevisar ?? "");
+  const [editandoDerivado, setEditandoDerivado] = useState(false);
+  const [derivado, setDerivado] = useState(derivadoA ?? "");
 
   async function cambiar(cuerpo: Record<string, unknown>) {
     setError(null);
@@ -43,6 +47,7 @@ export function AccionesAviso({
       return;
     }
     setPidiendoMotivo(false);
+    setEditandoDerivado(false);
     startTransition(() => router.refresh());
   }
 
@@ -133,6 +138,39 @@ export function AccionesAviso({
           )}
         </div>
         {error && <p className="mt-3 text-sm text-fj-danger">{error}</p>}
+      </Tarjeta>
+
+      <Tarjeta className="p-5">
+        <div className="mb-1 flex items-center justify-between gap-2">
+          <h2 className="text-sm font-semibold text-fj-text">Derivado a</h2>
+          {!editandoDerivado && (
+            <button type="button" onClick={() => setEditandoDerivado(true)} className="text-sm text-fj-navy underline-offset-2 hover:underline">
+              {derivadoA ? "Cambiar" : "Anotar"}
+            </button>
+          )}
+        </div>
+        <p className="mb-2 text-xs text-fj-muted">Número o persona a la que el asistente pasó la llamada o el chat. Lo rellena el flujo al transferir, o la oficina a mano.</p>
+        {editandoDerivado ? (
+          <form
+            className="flex flex-col gap-2"
+            onSubmit={(e) => {
+              e.preventDefault();
+              cambiar({ derivado_a: derivado.trim() || null });
+            }}
+          >
+            <input value={derivado} onChange={(e) => setDerivado(e.target.value)} placeholder="p. ej. Guardia · 600 000 000 o Guillermo" className={claseInput} autoFocus />
+            <div className="flex gap-2">
+              <button type="submit" disabled={pendiente} className={claseBotonPrimario}>
+                Guardar
+              </button>
+              <button type="button" onClick={() => setEditandoDerivado(false)} className={claseBotonSecundario}>
+                Cancelar
+              </button>
+            </div>
+          </form>
+        ) : (
+          <p className="text-sm text-fj-text">{derivadoA ?? <span className="text-fj-faint">No se derivó a nadie.</span>}</p>
+        )}
       </Tarjeta>
 
       <Tarjeta className="p-5">

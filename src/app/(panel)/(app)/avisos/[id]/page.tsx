@@ -8,6 +8,7 @@ import { formatearDuracion, formatearEuros, formatearFechaHora } from "@/lib/fec
 import { textoParaGoManage } from "@/lib/gomanage";
 import { Canal, Dato, InsigniaEstadoAviso, InsigniaEstadoContacto, InsigniaTipo, Tarjeta, Titulo } from "@/components/ui";
 import { AccionesAviso } from "@/components/AccionesAviso";
+import { EnlaceMapa, MapaIncrustado } from "@/components/Mapa";
 import { Refresco } from "@/components/Refresco";
 
 export const metadata = { title: "Detalle del aviso" };
@@ -57,6 +58,12 @@ export default async function PaginaAviso({ params }: { params: Promise<{ id: st
           Pasado al programa por <strong>{aviso.pasado_por ?? "—"}</strong> el {formatearFechaHora(aviso.pasado_at)}.
         </div>
       )}
+      {aviso.derivado_a && (
+        <div className="mb-4 rounded-xl border border-fj-info/30 bg-fj-info-soft px-4 py-3 text-sm text-fj-info">
+          Derivado a <strong>{aviso.derivado_a}</strong>
+          {aviso.derivado_at && <> el {formatearFechaHora(aviso.derivado_at)}</>}.
+        </div>
+      )}
 
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
@@ -99,7 +106,16 @@ export default async function PaginaAviso({ params }: { params: Promise<{ id: st
                   "—"
                 )}
               </Dato>
-              <Dato etiqueta="Dirección">{aviso.direccion ?? "—"}</Dato>
+              <Dato etiqueta="Dirección">
+                {aviso.direccion ? (
+                  <span className="inline-flex flex-wrap items-center gap-2">
+                    {aviso.direccion}
+                    <EnlaceMapa direccion={aviso.direccion} soloIcono />
+                  </span>
+                ) : (
+                  "—"
+                )}
+              </Dato>
               <Dato etiqueta="Piso">{aviso.piso ?? "—"}</Dato>
               <Dato etiqueta="Comunidad reconocida" ancho>
                 {comunidad ? (
@@ -130,6 +146,11 @@ export default async function PaginaAviso({ params }: { params: Promise<{ id: st
                 )}
               </Dato>
             </dl>
+            {aviso.direccion && (
+              <div className="mt-4">
+                <MapaIncrustado direccion={aviso.direccion} alto={220} />
+              </div>
+            )}
           </Tarjeta>
 
           <Tarjeta className="p-5">
@@ -172,6 +193,7 @@ export default async function PaginaAviso({ params }: { params: Promise<{ id: st
             estado={aviso.estado}
             motivoRevisar={aviso.motivo_revisar}
             contactoId={aviso.contacto_id}
+            derivadoA={aviso.derivado_a}
             textoGoManage={textoParaGoManage(aviso)}
           />
         </div>

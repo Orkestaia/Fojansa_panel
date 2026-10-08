@@ -9,6 +9,7 @@ const ENLACES = [
   { href: "/contactos", texto: "Contactos" },
   { href: "/comunidades", texto: "Comunidades" },
   { href: "/partes", texto: "Partes" },
+  { href: "/gastos", texto: "Gastos" },
   { href: "/chat", texto: "Probar el asistente" },
 ];
 
