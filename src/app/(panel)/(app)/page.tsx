@@ -21,7 +21,7 @@ export default async function PaginaInicio({ searchParams }: { searchParams: Pro
       <Titulo
         sub="Llamadas y chats atendidos por el asistente, su coste y lo que queda por revisar."
         acciones={
-          <div role="tablist" aria-label="Periodo" className="flex rounded-lg border border-fj-border bg-fj-surface p-0.5">
+          <div role="tablist" aria-label="Periodo" data-tour="inicio-periodo" className="flex rounded-lg border border-fj-border bg-fj-surface p-0.5">
             {PERIODOS.map((p) => (
               <Link
                 key={p.clave}
@@ -41,7 +41,7 @@ export default async function PaginaInicio({ searchParams }: { searchParams: Pro
         Inicio · {etiquetaPeriodo}
       </Titulo>
 
-      <section className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6" aria-label="Resumen">
+      <section className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6" aria-label="Resumen" data-tour="inicio-cifras">
         <Cifra titulo="Atendidos" valor={m.total} pie={`${m.porCanal.voz} voz · ${m.porCanal.chat} chat`} />
         <Cifra
           titulo="Satisfactorios"
@@ -77,7 +77,7 @@ export default async function PaginaInicio({ searchParams }: { searchParams: Pro
           <p className="mb-3 text-xs text-fj-muted">Qué está entrando por el asistente.</p>
           <GraficoPorTipo datos={m.porTipo.map((x) => ({ nombre: x.tipo === "sin_tipo" ? "Sin tipo" : ETIQUETA_TIPO[x.tipo], n: x.n }))} />
         </Tarjeta>
-        <Tarjeta className="p-4">
+        <Tarjeta className="p-4" data-tour="inicio-horas">
           <h2 className="text-sm font-semibold text-fj-text">Por hora del día</h2>
           <p className="mb-3 text-xs text-fj-muted">Hora de Vitoria. Lo que entra fuera del horario de oficina.</p>
           <GraficoPorHora datos={m.porHora} />

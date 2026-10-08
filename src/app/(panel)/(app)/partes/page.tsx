@@ -38,7 +38,7 @@ export default async function PaginaPartes({ searchParams }: { searchParams: Pro
       />
 
       {resumen.length > 0 && (
-        <section className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Resumen por obra">
+        <section className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Resumen por obra" data-tour="partes-resumen">
           {resumen.map((r) => (
             <Link key={r.obra} href={`/partes?obra=${encodeURIComponent(r.obra)}`} className="block rounded-xl border border-fj-border bg-fj-surface p-4 hover:border-fj-border-hi">
               <p className="truncate text-sm font-semibold text-fj-navy" title={r.obra}>

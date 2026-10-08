@@ -6,13 +6,16 @@ import { useEffect } from "react";
 /**
  * Polling (spec §2.2: "realtime o polling cada 10 s"): vuelve a pedir la página al servidor cada
  * N segundos mientras la pestaña está visible. Los componentes de servidor se re-renderizan con
- * los datos nuevos sin perder el estado del cliente (filtros, scroll).
+ * los datos nuevos sin perder el estado del cliente (filtros, scroll). Se pausa mientras el tour
+ * de bienvenida está activo (`<html data-tour="1">`) para que nada se mueva debajo de la burbuja.
  */
 export function Refresco({ segundos = 10 }: { segundos?: number }) {
   const router = useRouter();
   useEffect(() => {
     const tick = () => {
-      if (document.visibilityState === "visible") router.refresh();
+      if (document.visibilityState !== "visible") return;
+      if (document.documentElement.getAttribute("data-tour") === "1") return;
+      router.refresh();
     };
     const id = setInterval(tick, segundos * 1000);
     document.addEventListener("visibilitychange", tick);

@@ -38,7 +38,7 @@ export function ImportarCsv() {
   }
 
   return (
-    <div className="relative">
+    <div className="relative" data-tour="comunidades-importar">
       <input
         ref={input}
         type="file"

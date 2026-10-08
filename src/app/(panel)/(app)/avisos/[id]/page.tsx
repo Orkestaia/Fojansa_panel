@@ -153,7 +153,7 @@ export default async function PaginaAviso({ params }: { params: Promise<{ id: st
             )}
           </Tarjeta>
 
-          <Tarjeta className="p-5">
+          <Tarjeta className="p-5" data-tour="aviso-grabacion">
             <h2 className="mb-3 text-sm font-semibold text-fj-text">Grabación</h2>
             {aviso.url_grabacion ? (
               <audio controls preload="none" src={aviso.url_grabacion} className="w-full">

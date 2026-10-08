@@ -65,6 +65,16 @@ propósito** (claves `pk_test`/`sk_test`, como en diagnostico): la de producció
 propios. Claves puestas en Vercel (producción) con la CLI de Clerk (`clerk env pull`) sin pasar por
 el chat; proyecto enlazado (`.clerk/`, ignorado por git). El panel ya pide login en producción.
 
+**Onboarding (8-oct noche):** tour de bienvenida con driver.js (`src/lib/tour.ts` = pasos,
+`src/components/Tour.tsx` = motor: secuencia nativa por página, navegación entre rutas, paso en
+sessionStorage; `TourClerk` guarda "visto" en `unsafeMetadata.tourVisto` del usuario, `TourLocal` en
+localStorage en desarrollo). Arranca solo la primera vez; menú del usuario (`MenuUsuario.tsx`,
+`UserButton.MenuItems`) con «Guía de usuario» (`/guia`, con los audios de Retell desde la BD) y «Ver
+el tour otra vez». Elementos señalados con `data-tour="…"`. El refresco automático se pausa con
+`<html data-tour="1">`. Probado de punta a punta con `scratchpad/tour.py` (Playwright, servidor en
+modo desarrollo en el puerto 3018 arrancado con las claves de Clerk vacías). La guía en PDF de
+`docs/guia/` queda como copia imprimible.
+
 Pendiente de Aitor: CNAME `fojansa` → `cname.vercel-dns.com` en Namecheap;
 decidir si n8n manda el consumo de tokens (`uso` en la respuesta del chat o `POST /api/costes`) y si
 escribe `derivado_a` al transferir. El MCP de Vercel no tiene acceso al equipo: usar la CLI `npx vercel`.

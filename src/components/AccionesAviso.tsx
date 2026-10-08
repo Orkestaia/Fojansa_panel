@@ -65,7 +65,7 @@ export function AccionesAviso({
 
   return (
     <>
-      <Tarjeta className="p-5">
+      <Tarjeta className="p-5" data-tour="aviso-acciones">
         <h2 className="mb-3 text-sm font-semibold text-fj-text">Acciones</h2>
         <div className="flex flex-col gap-2">
           {estado !== "pasado_al_programa" && (
@@ -173,7 +173,7 @@ export function AccionesAviso({
         )}
       </Tarjeta>
 
-      <Tarjeta className="p-5">
+      <Tarjeta className="p-5" data-tour="aviso-gomanage">
         <div className="mb-2 flex items-center justify-between gap-2">
           <h2 className="text-sm font-semibold text-fj-text">Para Go!Manage</h2>
           <button type="button" onClick={copiar} className={copiado ? claseBotonPrimario : claseBotonSecundario} disabled={!textoGoManage}>

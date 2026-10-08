@@ -11,9 +11,9 @@ import type { CanalAviso, CanalParte, EstadoAviso, EstadoContacto, EstadoParte, 
 
 /** Piezas de interfaz compartidas. Sin color hardcodeado: todo son tokens de globals.css. */
 
-export function Tarjeta({ children, className = "" }: { children: ReactNode; className?: string }) {
+export function Tarjeta({ children, className = "", ...resto }: { children: ReactNode; className?: string; id?: string; "data-tour"?: string }) {
   return (
-    <div className={`rounded-xl border border-fj-border bg-fj-surface shadow-[0_1px_2px_rgba(0,46,98,0.04)] ${className}`}>
+    <div className={`rounded-xl border border-fj-border bg-fj-surface shadow-[0_1px_2px_rgba(0,46,98,0.04)] ${className}`} {...resto}>
       {children}
     </div>
   );

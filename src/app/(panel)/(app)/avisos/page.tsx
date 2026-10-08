@@ -51,9 +51,11 @@ export default async function PaginaAvisos({ searchParams }: { searchParams: Pro
       <Titulo sub={`${avisos.length} ${avisos.length === 1 ? "aviso" : "avisos"}${hayFiltros ? " con estos filtros" : ""} · se actualiza solo cada 10 s`}>
         Avisos
       </Titulo>
-      <FiltrosBandeja />
+      <div data-tour="avisos-filtros">
+        <FiltrosBandeja />
+      </div>
 
-      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-fj-muted" aria-label="Leyenda de colores">
+      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-fj-muted" aria-label="Leyenda de colores" data-tour="avisos-leyenda">
         {LEYENDA.map((l) => (
           <span key={l.texto} className="inline-flex items-center gap-1.5">
             <span className={`inline-block h-3 w-1.5 rounded-sm ${l.clase}`} aria-hidden />
@@ -70,10 +72,10 @@ export default async function PaginaAvisos({ searchParams }: { searchParams: Pro
         <>
           {/* Móvil: tarjetas */}
           <ul className="mt-3 flex flex-col gap-2 md:hidden">
-            {avisos.map((a) => {
+            {avisos.map((a, i) => {
               const com = a.comunidad_id ? comunidades.get(a.comunidad_id) : undefined;
               return (
-                <li key={a.id} className={`rounded-xl border border-l-4 border-fj-border bg-fj-surface p-3 ${franjaTipo(a)}`}>
+                <li key={a.id} data-tour={i === 0 ? "avisos-fila" : undefined} className={`rounded-xl border border-l-4 border-fj-border bg-fj-surface p-3 ${franjaTipo(a)}`}>
                   <div className="flex items-start justify-between gap-2">
                     <Link href={`/avisos/${a.id}`} className="min-w-0 flex-1">
                       <p className="truncate font-medium text-fj-text">
@@ -131,7 +133,7 @@ export default async function PaginaAvisos({ searchParams }: { searchParams: Pro
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-fj-border">
-                  {avisos.map((a) => {
+                  {avisos.map((a, i) => {
                     const com = a.comunidad_id ? comunidades.get(a.comunidad_id) : undefined;
                     return (
                       <tr key={a.id} className={`border-l-4 hover:bg-fj-surface-2 ${franjaTipo(a)} ${a.urgente ? "bg-fj-danger-soft/40" : ""}`}>
@@ -182,7 +184,7 @@ export default async function PaginaAvisos({ searchParams }: { searchParams: Pro
                         <td className="px-3 py-2.5 align-top text-fj-text">{a.derivado_a ?? <span className="text-fj-faint">—</span>}</td>
                         <td className="tabular px-3 py-2.5 text-right align-top text-fj-text">{formatearEuros(a.coste_eur)}</td>
                         <td className="px-3 py-2.5 text-right align-top">
-                          <Link href={`/avisos/${a.id}`} aria-label="Ver aviso" title="Ver aviso" className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-fj-navy-soft text-fj-navy hover:bg-fj-navy hover:text-white">
+                          <Link href={`/avisos/${a.id}`} aria-label="Ver aviso" title="Ver aviso" data-tour={i === 0 ? "avisos-fila" : undefined} className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-fj-navy-soft text-fj-navy hover:bg-fj-navy hover:text-white">
                             <IconoOjo />
                           </Link>
                         </td>

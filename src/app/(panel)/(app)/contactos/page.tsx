@@ -31,7 +31,7 @@ export default async function PaginaContactos({ searchParams }: { searchParams: 
         placeholder="Buscar nombre, teléfono, dirección…"
         filtros={[{ clave: "estado", etiqueta: "Estado", opciones: ESTADOS_CONTACTO.map((e) => ({ valor: e, texto: ETIQUETA_ESTADO_CONTACTO[e] })) }]}
       />
-      <Tarjeta className="mt-4 overflow-hidden">
+      <Tarjeta className="mt-4 overflow-hidden" data-tour="contactos-tabla">
         {contactos.length === 0 ? (
           <Vacio>No hay contactos {sp.q || estado ? "con esta búsqueda" : "todavía"}.</Vacio>
         ) : (

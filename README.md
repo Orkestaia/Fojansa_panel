@@ -92,7 +92,16 @@ npm run lint
 
 Checklist de QA manual de la spec §6: [`docs/QA-CHECKLIST.md`](docs/QA-CHECKLIST.md).
 
-## Guía de usuario para Fojansa
+## Onboarding y guía dentro de la app
+
+Tour de bienvenida (driver.js) que arranca solo la primera vez que entra cada usuario y recorre las
+secciones señalando dónde pulsar (16 pasos, Siguiente / Atrás / Saltar / «No volver a mostrar»).
+Lo de "ya lo vi" se guarda en el perfil de Clerk del usuario (`unsafeMetadata.tourVisto`). Desde el
+menú del usuario (arriba a la derecha): «Guía de usuario» (`/guia`, con el asistente de voz explicado
+y una llamada real con audio) y «Ver el tour otra vez». Los pasos están en `src/lib/tour.ts`; cada
+elemento señalado lleva `data-tour="…"`.
+
+## Guía de usuario para Fojansa (PDF)
 
 `docs/guia/guia-panel-fojansa.html` (y su PDF) con capturas, el audio de dos llamadas reales de
 prueba y la explicación del asistente de voz, el chat y los partes. Se regenera con:

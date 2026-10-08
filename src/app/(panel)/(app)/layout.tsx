@@ -1,8 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { SignOutButton, UserButton } from "@clerk/nextjs";
+import { SignOutButton } from "@clerk/nextjs";
 import { clerkActivo, modoDesarrolloSinClerk, usuarioActual } from "@/lib/acceso";
+import { MenuUsuarioClerk, MenuUsuarioLocal } from "@/components/MenuUsuario";
 import { NavEnlaces } from "@/components/NavEnlaces";
+import { TourLocal } from "@/components/Tour";
+import { TourClerk } from "@/components/TourClerk";
 
 export const dynamic = "force-dynamic";
 
@@ -47,21 +50,28 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             </span>
           </div>
           {/* En pantallas estrechas (tablet) la navegación baja a una segunda fila en vez de recortarse. */}
-          <div className="order-last w-full pb-1 xl:order-none xl:w-auto xl:flex-1 xl:pb-0">
+          <div className="order-last w-full pb-1 xl:order-none xl:w-auto xl:flex-1 xl:pb-0" data-tour="nav">
             <NavEnlaces />
           </div>
           <div className="ml-auto flex items-center gap-3">
             <span className="hidden text-sm text-fj-muted sm:inline">{usuario.nombre}</span>
             {clerkActivo() ? (
-              <UserButton />
-            ) : modoDesarrolloSinClerk() ? (
-              <span className="rounded-full bg-fj-warn-soft px-2 py-0.5 text-xs font-medium text-fj-warn" title="Sin Clerk: solo en desarrollo">
-                Desarrollo
-              </span>
-            ) : null}
+              <MenuUsuarioClerk />
+            ) : (
+              <>
+                {modoDesarrolloSinClerk() && (
+                  <span className="rounded-full bg-fj-warn-soft px-2 py-0.5 text-xs font-medium text-fj-warn" title="Sin Clerk: solo en desarrollo">
+                    Desarrollo
+                  </span>
+                )}
+                <MenuUsuarioLocal nombre={usuario.nombre} />
+              </>
+            )}
           </div>
         </div>
       </header>
+      {/* Tour de bienvenida: la primera vez arranca solo; después, desde el menú del usuario. */}
+      {clerkActivo() ? <TourClerk /> : <TourLocal />}
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6">{children}</main>
       <footer className="border-t border-fj-border py-4 text-center text-xs text-fj-faint">
         Instalaciones Fojansa · con tecnología de Orkesta

@@ -47,7 +47,7 @@ export default async function PaginaGastos({ searchParams }: { searchParams: Pro
         Gastos · {etiquetaPeriodo}
       </Titulo>
 
-      <section className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6" aria-label="Totales">
+      <section className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6" aria-label="Totales" data-tour="gastos-cifras">
         <Cifra titulo="Total del periodo" valor={formatearEuros(r.total)} pie={`${formatearEuros(r.llamadas.coste)} voz · ${formatearEuros(r.ia.coste)} IA`} destacado />
         <Cifra titulo="Llamadas de voz" valor={r.llamadas.n} pie={`${r.llamadas.minutos} min en total`} />
         <Cifra titulo="Coste por llamada" valor={formatearEuros(r.llamadas.costeMedio)} pie={`${fmt4(r.llamadas.costePorMinuto)} por minuto`} />

@@ -138,7 +138,7 @@ export function ChatWhatsApp() {
           <div ref={fin} />
         </div>
 
-        <form onSubmit={enviar} className="flex items-center gap-2 border-t border-black/5 bg-[#f0f0f0] px-3 py-2">
+        <form onSubmit={enviar} data-tour="chat-caja" className="flex items-center gap-2 border-t border-black/5 bg-[#f0f0f0] px-3 py-2">
           <input
             ref={campo}
             value={texto}
