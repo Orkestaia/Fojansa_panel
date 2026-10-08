@@ -59,8 +59,13 @@ local con el usuario "Guillermo", audios reales de Retell). **El filtro de segur
 herramienta bloqueó añadir un "acceso por clave compartida" alternativo a Clerk**: no insistir;
 el acceso es Clerk o nada.
 
-Pendiente de Aitor: crear la app de Clerk "Fojansa Panel" (registro cerrado, dos usuarios: Guillermo
-y oficina) y poner sus dos claves en Vercel; CNAME `fojansa` → `cname.vercel-dns.com` en Namecheap;
+**Clerk en marcha (8-oct tarde):** app `FOJANSA` (`app_3KPXcVQwJeOiZygPHBs4OkcEMKt`), login por
+**nombre de usuario + contraseña**, usuarios creados a mano por Aitor. Instancia de **desarrollo a
+propósito** (claves `pk_test`/`sk_test`, como en diagnostico): la de producción exige dominio y DNS
+propios. Claves puestas en Vercel (producción) con la CLI de Clerk (`clerk env pull`) sin pasar por
+el chat; proyecto enlazado (`.clerk/`, ignorado por git). El panel ya pide login en producción.
+
+Pendiente de Aitor: CNAME `fojansa` → `cname.vercel-dns.com` en Namecheap;
 decidir si n8n manda el consumo de tokens (`uso` en la respuesta del chat o `POST /api/costes`) y si
 escribe `derivado_a` al transferir. El MCP de Vercel no tiene acceso al equipo: usar la CLI `npx vercel`.
 

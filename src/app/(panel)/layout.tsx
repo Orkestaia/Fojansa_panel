@@ -10,7 +10,20 @@ export default function PanelLayout({ children }: { children: React.ReactNode })
   if (!clerkActivo()) return <>{children}</>;
   return (
     <ClerkProvider
-      localization={esES}
+      localization={{
+        ...esES,
+        signIn: {
+          ...esES.signIn,
+          start: {
+            ...esES.signIn?.start,
+            title: "Entrar al panel",
+            subtitle: "Usuario y contraseña de Instalaciones Fojansa",
+            // Con usuario + contraseña en un solo paso Clerk usa las claves "Combined" (en es-ES vienen vacías).
+            titleCombined: "Entrar al panel",
+            subtitleCombined: "Usuario y contraseña de Instalaciones Fojansa",
+          },
+        },
+      }}
       appearance={{
         variables: { colorPrimary: "#002e62", borderRadius: "0.6rem", fontFamily: "var(--font-inter)" },
       }}
