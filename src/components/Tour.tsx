@@ -6,6 +6,23 @@ import { driver, type Driver, type DriveStep } from "driver.js";
 import "driver.js/dist/driver.css";
 import { CLAVE_PASO_TOUR, CLAVE_TOUR_VISTO, EVENTO_TOUR, PASOS_TOUR, resolverPasos, type PasoTour } from "@/lib/tour";
 
+/** El elemento VISIBLE con ese data-tour (la bandeja tiene versión móvil y escritorio; una está oculta). */
+function elementoVisible(objetivo: string): HTMLElement | null {
+  return [...document.querySelectorAll<HTMLElement>(`[data-tour="${objetivo}"]`)].find((e) => e.getClientRects().length > 0) ?? null;
+}
+
+/** Espera (hasta 5 s) a que el elemento del paso exista: la página puede estar cargando datos. */
+function esperarElemento(objetivo: string, intentos = 50): Promise<HTMLElement | null> {
+  return new Promise((resolver) => {
+    const buscar = (n: number) => {
+      const el = elementoVisible(objetivo);
+      if (el || n <= 0) return resolver(el);
+      setTimeout(() => buscar(n - 1), 100);
+    };
+    buscar(intentos);
+  });
+}
+
 /**
  * Tour de bienvenida (onboarding) estilo SaaS con driver.js.
  *
@@ -56,20 +73,6 @@ export function Tour({ visto, cargado, marcarVisto }: { visto: boolean; cargado:
     pasosRef.current = resolverPasos(PASOS_TOUR, avisoId);
     return pasosRef.current;
   }, []);
-
-  /** El elemento VISIBLE con ese data-tour (la bandeja tiene versión móvil y escritorio; una está oculta). */
-  const elementoVisible = (objetivo: string): HTMLElement | null =>
-    [...document.querySelectorAll<HTMLElement>(`[data-tour="${objetivo}"]`)].find((e) => e.getClientRects().length > 0) ?? null;
-
-  const esperarElemento = (objetivo: string, intentos = 50): Promise<HTMLElement | null> =>
-    new Promise((resolver) => {
-      const buscar = (n: number) => {
-        const el = elementoVisible(objetivo);
-        if (el || n <= 0) return resolver(el);
-        setTimeout(() => buscar(n - 1), 100);
-      };
-      buscar(intentos);
-    });
 
   /** Muestra el paso global `i`: navega si está en otra ruta, o arranca la secuencia de esta página. */
   const mostrarPaso = useCallback(
