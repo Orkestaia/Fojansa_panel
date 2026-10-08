@@ -29,5 +29,7 @@ export const config = {
     // Todo menos estáticos e imágenes.
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
     "/(api|trpc)(.*)",
+    // Proxy de Clerk: sin esto el propio login entra en bucle.
+    "/__clerk/:path*",
   ],
 };

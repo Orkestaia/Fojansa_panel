@@ -19,3 +19,6 @@ qa/
 
 # Guía de cliente con audios y datos de pruebas reales: se entrega aparte, no al repo (que es público).
 docs/guia/
+
+# Enlace local de la CLI de Clerk
+.clerk/
