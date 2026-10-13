@@ -26,5 +26,6 @@ describe("resolverPasos", () => {
     const r = resolverPasos(PASOS_TOUR, null);
     expect(r.every((p) => !p.ruta.includes("{aviso}"))).toBe(true);
     expect(r.length).toBe(PASOS_TOUR.length - 3);
+    expect(PASOS_TOUR.length).toBe(17);
   });
 });

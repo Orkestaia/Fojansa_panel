@@ -24,7 +24,7 @@ Spec: `ORKESTA - JARVIS/02_CLIENTS/INDUSTRY/instalaciones-fojansa/technical/foja
 | `/contactos`, `/contactos/[id]`, `/contactos/nuevo` | CRM ligero: estado derivado de la comunidad (pagos pendientes / sin contrato), historial de avisos, partes si es obra, notas |
 | `/comunidades` | Lista editable inline + importar CSV (`direccion, nombre, administrador, contrato_vigente, pagos_al_dia`) |
 | `/partes`, `/partes/[id]` | Partes por audio: filtros por obra/estado/fecha, resumen por obra (horas y unidades), transcripción original y en español, Validar / Corregir / Descartar |
-| `/chat` | "Probar el asistente": interfaz WhatsApp, `session_id` nuevo por carga, toast "Aviso registrado" |
+| `/chat` | "Probar el asistente": **llamada por voz desde el navegador** (Retell Web Call: `POST /api/voz` crea la llamada con `RETELL_API_KEY` en el servidor y el navegador conecta el micrófono con un token de un solo uso; la llamada pasa por el mismo webhook de n8n y aparece en la bandeja) + interfaz WhatsApp, `session_id` nuevo por carga, toast "Aviso registrado" |
 | `/gastos` | Gastos del agente: total del periodo, coste por llamada y por minuto, desglose de Retell por producto (motor de voz, ElevenLabs, modelo, telefonía…), gasto por día, respuestas de IA con tokens y coste por modelo |
 
 Detalles transversales: botón «ver» (ojo) en todas las listas; franja de color por tipo en la bandeja
@@ -72,7 +72,8 @@ Ver [`.env.example`](.env.example) (sin valores). Resumen:
 | `PANEL_EMAILS_PERMITIDOS` | Opcional. Emails (coma) que pueden entrar además de tener sesión |
 | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | Supabase, solo servidor. Nunca `NEXT_PUBLIC_*` |
 | `N8N_CHAT_WEBHOOK_URL`, `N8N_CHAT_TOKEN` | Webhook del chat (`/webhook/fojansa-chat`) y token opcional (`x-orkesta-token`) |
-| `FOJANSA_API_TOKEN` | Bearer para que n8n llame a `POST /api/avisos/vincular`. Mín. 32 caracteres |
+| `FOJANSA_API_TOKEN` | Bearer para que n8n llame a `POST /api/avisos/vincular` y `/api/costes`. Mín. 32 caracteres |
+| `RETELL_API_KEY`, `RETELL_AGENT_ID` | Llamada al asistente desde el navegador. Solo servidor. Sin la clave, el botón avisa de que no está activado |
 
 ## Ejecutar en local
 

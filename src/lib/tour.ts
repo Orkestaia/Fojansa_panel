@@ -111,9 +111,16 @@ export const PASOS_TOUR: PasoTour[] = [
   },
   {
     ruta: "/chat",
+    objetivo: "voz-boton",
+    titulo: "Probar por voz",
+    texto: "Pulsa «Llamar al asistente» y habla con el micrófono del ordenador: es el mismo agente que cogerá el teléfono. Al colgar, el aviso aparece en la bandeja con su grabación.",
+    lado: "bottom",
+  },
+  {
+    ruta: "/chat",
     objetivo: "chat-caja",
-    titulo: "Probar el asistente",
-    texto: "El mismo cerebro que atiende el teléfono, por escrito. Escribe como lo haría un vecino y, cuando cierre el aviso, lo verás en la bandeja. En producción será WhatsApp.",
+    titulo: "Probar por escrito",
+    texto: "El mismo cerebro, por chat. Escribe como lo haría un vecino y, cuando cierre el aviso, lo verás en la bandeja. En producción será WhatsApp.",
     lado: "top",
   },
   {

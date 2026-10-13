@@ -211,9 +211,12 @@ export default async function PaginaGuia() {
           </Tarjeta>
 
           <Tarjeta className="p-6" id="chat">
-            <h2 className="text-lg font-semibold text-fj-navy">El chat</h2>
+            <h2 className="text-lg font-semibold text-fj-navy">Probar el asistente: por voz y por chat</h2>
             <p className="mt-2 text-sm text-fj-text">
-              En «Probar el asistente» está el mismo cerebro que atiende el teléfono, por escrito y con aspecto de WhatsApp. Escribe como lo haría un vecino («no tengo calefacción en Fernando Maturana 24, tercero izquierda»), contesta a lo que pregunta y, cuando cierre el aviso, lo verás en la bandeja con el icono de chat. Prueba también el guion de particular, el de recibo y uno de «olor a gas».
+              En «Probar el asistente», el botón <strong>Llamar al asistente</strong> abre una llamada desde el micrófono del ordenador con el mismo agente que cogerá el teléfono: saluda, pregunta, confirma dirección y teléfono y, al colgar, el aviso aparece en la bandeja con su grabación. No hace falta ningún número ni instalar nada; el navegador pedirá permiso para usar el micrófono.
+            </p>
+            <p className="mt-2 text-sm text-fj-text">
+              Debajo está el mismo cerebro por escrito y con aspecto de WhatsApp. Escribe como lo haría un vecino («no tengo calefacción en Fernando Maturana 24, tercero izquierda»), contesta a lo que pregunta y, cuando cierre el aviso, lo verás en la bandeja con el icono de chat. Prueba también el guion de particular, el de recibo y uno de «olor a gas».
             </p>
           </Tarjeta>
 

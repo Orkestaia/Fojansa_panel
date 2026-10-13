@@ -87,7 +87,7 @@ export function ChatWhatsApp() {
   }
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col gap-3">
+    <div className="flex flex-col gap-3">
       <div className="relative flex h-[min(72dvh,760px)] flex-col overflow-hidden rounded-2xl border border-fj-border shadow-sm">
         <header className="flex items-center gap-3 bg-wa-header px-4 py-3 text-white">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-lg" aria-hidden>

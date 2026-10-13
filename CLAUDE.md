@@ -75,6 +75,14 @@ el tour otra vez». Elementos señalados con `data-tour="…"`. El refresco auto
 modo desarrollo en el puerto 3018 arrancado con las claves de Clerk vacías). La guía en PDF de
 `docs/guia/` queda como copia imprimible.
 
+**13-oct:** llamada por voz desde el navegador en «Probar el asistente» (`/api/voz` →
+`POST https://api.retellai.com/v3/create-web-call` con `RETELL_API_KEY`; cliente
+`retell-client-js-sdk` 3.x con el `RetellWebClient` heredado y `startCall({accessToken, callId,
+transport, iceServers})`; la v2 está retirada). Probado con Chromium y micrófono falso: el agente
+cuelga por silencio a los ~40 s y el aviso (`silencio`, revisar, ~0,11 €) llega a la bandeja por el
+webhook de n8n. Retell no vende números +34: para teléfono real, Twilio (bundle regulatorio) +
+SIP. Informe técnico para la propuesta en `docs/internos/` (ignorado por git).
+
 Pendiente de Aitor: CNAME `fojansa` → `cname.vercel-dns.com` en Namecheap;
 decidir si n8n manda el consumo de tokens (`uso` en la respuesta del chat o `POST /api/costes`) y si
 escribe `derivado_a` al transferir. El MCP de Vercel no tiene acceso al equipo: usar la CLI `npx vercel`.
