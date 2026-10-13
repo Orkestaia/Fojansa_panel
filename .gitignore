@@ -22,3 +22,6 @@ docs/guia/
 
 # Enlace local de la CLI de Clerk
 .clerk/
+
+# Informes internos (costes, cliente): no al repo público
+docs/internos/
